@@ -1329,17 +1329,22 @@ class RedBlackKassaBot:
                 bet_id = f.read().strip()
 
             instructions = f"""
-            <b> ⚠️ Diqqat !!!
+            <b>⚠️ Diqqat !!!</b>
 
-            💸 To'lovni quyidagi kartaga o'tkazing
+            💸 To'lovni quyidagi kartaga o'tkazing:
 
-            💳 Humo  <code>5614684809828005</code>
+            💳 Humo: <code>5614684809828005</code>
             👤 <i>SHOMUROTOV BEHRUZ</i>
 
-            ➡️ To‘lov summasi: <b>{summa} so‘m</b>
-            ➡️ 1XBET ID: <code>{bet_id}</code>
+            ➕ <b>{text} so‘m</b> 1XBET hisobingizga o'tkaziladi.
 
-            <b>📸 To‘lov chekini yuboring</b>
+            💸 Minimal pul miqdori: <code>50.000</code> uzs  
+            💸 Maksimal pul miqdori: <code>5.000.000</code> uzs
+
+            <b>📸 To'lovni amalga oshirib, to'lov chekini yuboring.</b>
+
+            ⚠️ To'lov qilganingizdan keyin <b>{text} so‘m</b> hisobingizga qo'shiladi.
+            Yuqoridagi talablarni bajarmasangiz, biz aybdor emasmiz.
             """
             await update.message.reply_text(instructions, parse_mode='HTML')
 
