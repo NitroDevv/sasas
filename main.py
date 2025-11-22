@@ -1290,35 +1290,62 @@ class RedBlackKassaBot:
                         parse_mode='HTML'
                     )
 
-        # 1XBET ID kiritish
         elif user_step == "oplata":
             if text == "◀️ Orqaga":
                 self.delete_user_step(user_id)
                 await self.back_handler(update, context)
                 return
 
+            # Bu yerga ID saqlaymiz
             os.makedirs("step", exist_ok=True)
-            with open(f"step/hisob.{user_id}", "w") as f:
+            with open(f"step/betid.{user_id}", "w") as f:
                 f.write(text)
 
+            await update.message.reply_text(
+                "<b>💰 Qancha pul to‘ldirmoqchisiz?</b>\n\n"
+                "Minimal: <b>50 000 so‘m</b>\nMaksimal: <b>5 000 000 so‘m</b>",
+                parse_mode='HTML'
+            )
+
+            self.set_user_step(user_id, "summa")
+            return
+
+        elif user_step == "summa":
+            if not text.isdigit():
+                await update.message.reply_text("❌ Faqat raqam kiriting!")
+                return
+
+            summa = int(text)
+
+            if summa < 50000 or summa > 5000000:
+                await update.message.reply_text("⚠️ 50 000 — 5 000 000 oralig‘ida summa kiriting!")
+                return
+
+            with open(f"step/summa.{user_id}", "w") as f:
+                f.write(text)
+
+            # Endi ID ni o‘qiymiz
+            with open(f"step/betid.{user_id}", "r") as f:
+                bet_id = f.read().strip()
+
             instructions = f"""
-<b> ⚠️ Diqqat !!!
+            <b> ⚠️ Diqqat !!!
 
-💸 To'lovni quyidagi kartaga o'tkazing
+            💸 To'lovni quyidagi kartaga o'tkazing
 
-💳 Humo  <code>5614684809828005</code>
-👤 <i>SHOMUROTOV BEHRUZ</i>
+            💳 Humo  <code>5614684809828005</code>
+            👤 <i>SHOMUROTOV BEHRUZ</i>
 
-➕ <code>{text}</code> 1XBET hisobingizga o'tkaziladi.</b>
+            ➡️ To‘lov summasi: <b>{summa} so‘m</b>
+            ➡️ 1XBET ID: <code>{bet_id}</code>
 
-💸 Minimal pul miqdori: <code>50.000</code>uzs
-💸 Maksimal pul miqdori: <code>5.000.000 </code>uzs
-
-<b><i>📸 To'lovni amalga oshirib to'lov chekini yuboring</i></b>
-
-⚠️ <b>To'lov qilganizdan keyin <code>{text}</code> hisobingizga pul qo'shiladi, yuqorida ko'rsatilgan talablarni bajarmasangiz biz aybdor emasmiz.</b>"""
+            <b>📸 To‘lov chekini yuboring</b>
+            """
             await update.message.reply_text(instructions, parse_mode='HTML')
+
             self.set_user_step(user_id, "rasm")
+            return
+
 
         # Xabarnoma yuborish
         elif user_step == "oddiy":
